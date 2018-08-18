@@ -416,7 +416,16 @@ namespace PersistentTrails
         {
             Vessel vessel = FlightGlobals.ActiveVessel;
             //check if sourceVessel has a gps receiver partModule
-            Part receiverPart = vessel.Parts.Find(t => t.name == "FigaroReceiver");
+
+            // Changed from looking for a specific part to looking at all modules on all part
+            // since there are now more than one GPS receiver
+            Part receiverPart = null;
+            for (int i = vessel.Parts.Count - 1; i >= 0; i--)
+                if (vessel.Parts[i].Modules.Contains("KerbalGPS"))
+                {
+                    receiverPart = vessel.Parts[i];
+                    break;
+                }
 
             if (!receiverPart){
 
@@ -426,7 +435,8 @@ namespace PersistentTrails
             }
 
             //Debug.Log("found GPSReceiverpart");
-            if(receiverPart.Modules.Contains("KerbalGPS")) {
+            //if(receiverPart.Modules.Contains("KerbalGPS"))
+            {
                 PartModule receiverModule = receiverPart.Modules["KerbalGPS"];
 
                 //Debug.Log("Found KerbalGPS Module in ReceiverPart");
@@ -446,8 +456,8 @@ namespace PersistentTrails
             } //endif module found
 
             //Module not found - OLD FigaroGPS version
-            allowRecording = true;
-            return true;
+            //allowRecording = true;
+            //return true;
 
         }//
     }
